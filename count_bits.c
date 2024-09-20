@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	unsigned char* char_iterator_end = char_iterator + pending_bytes;
 
 	while (char_iterator != char_iterator_end) {
-		ones += __builtin_popcountll(*char_iterator);
+		ones += __builtin_popcount(*char_iterator);
 		char_iterator++;
 	}
 
