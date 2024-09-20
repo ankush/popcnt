@@ -19,9 +19,9 @@ int main(int argc, char* argv[]) {
 	unsigned long long total_bits = 0;
 
 	while((bytes_read = fread(buffer, sizeof(unsigned long long), BUFSIZE, input)) != 0) {
+		total_bits += 64 * bytes_read;
 		for (int i = 0; i < bytes_read; i++) {
 			ones += __builtin_popcountll(buffer[i]);
-			total_bits += 64;
 		}
 	}
 	printf("1/0 ratio: %f%%\n", ones / (double) total_bits * 100);
