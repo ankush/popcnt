@@ -1,4 +1,4 @@
 *.dat
 *.txt
 *.zst
-*.out
+count_bits
