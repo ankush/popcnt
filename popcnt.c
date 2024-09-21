@@ -49,12 +49,13 @@ int main(int argc, char* argv[]) {
     }
 
     // Remove edge case from loop for avoiding dependent instructions in tight loop
-    unsigned long long ones = 0;
-    size_t pending_bytes = file_size - ((end - start) * 8);
-    unsigned char* char_iterator = (unsigned char*)start + chunk_size * NTHREADS;
-    ;
+    unsigned long long* last_work = start + chunk_size * NTHREADS;
+    size_t pending_bytes = file_size - ((last_work - start) * 8);
+
+    unsigned char* char_iterator = (unsigned char*)last_work;
     unsigned char* char_iterator_end = char_iterator + pending_bytes;
 
+    unsigned long long ones = 0;
     while (char_iterator != char_iterator_end) {
         ones += __builtin_popcount(*char_iterator);
         char_iterator++;
