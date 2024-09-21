@@ -1,4 +1,10 @@
-all: count_bits
+all: popcnt
 
-count_bits: count_bits.c Makefile
-	gcc -march=native -g -std=gnu99 -fprofile-use -O2 count_bits.c -o count_bits
+popcnt: popcnt.c Makefile
+	rm -f popcnt.gcda
+	gcc -march=native -g -std=gnu99 -fprofile-generate -O2 popcnt.c -o $@
+	./popcnt random.dat
+	gcc -march=native -g -std=gnu99 -fprofile-use -O2 popcnt.c -o $@
+
+clean:
+	rm -f popcnt popcnt.gcda
