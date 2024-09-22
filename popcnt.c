@@ -33,9 +33,7 @@ int main(int argc, char* argv[]) {
 
     // Read 64 bits = 8 bytes at a time
     u_int64_t* start = (u_int64_t*)mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, input_fd, 0);
-    u_int64_t* end = start + file_size / CHAR_BIT;
-
-    madvise(start, file_size, MADV_SEQUENTIAL);
+    u_int64_t* end = start + file_size / sizeof(start);
 
     pthread_t tids[NTHREADS];
     Work work[NTHREADS];
@@ -51,7 +49,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Remove edge case from loop for avoiding dependent instructions in tight loop
-    size_t pending_bytes = file_size - ((iterator - start) * CHAR_BIT);
+    size_t pending_bytes = file_size - ((iterator - start) * sizeof(iterator));
 
     unsigned char* char_iterator = (unsigned char*)iterator;
     unsigned char* char_iterator_end = char_iterator + pending_bytes;
@@ -80,6 +78,8 @@ void* count_bits(void* data) {
     u_int64_t* iterator = work->start;
     u_int64_t* end = iterator + work->length;
     u_int64_t ones = 0;
+    madvise(iterator, work->length * sizeof(iterator), MADV_SEQUENTIAL);
+
 
     while (iterator != end) {
         // with march=native, this translates to single instruction on x86
